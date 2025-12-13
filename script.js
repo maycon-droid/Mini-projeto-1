@@ -44,10 +44,8 @@ const dados = [
         curtidas: 4
     }
 ]
-let indiceLeftCentro = 1;
-let indiceCentro = 2;
-let indiceRightCentro = 3;
-
+let listaVisual=[...dados];
+let indiceCentro= Math.floor(listaVisual.length / 2);
 const container = document.getElementById('card-container');
 
 function renderizarCards(lista) {
@@ -57,13 +55,13 @@ function renderizarCards(lista) {
         const card = document.createElement('div');
         card.classList.add('card');
 
-        if(index === indiceLeftCentro) {
+        if(index === indiceCentro-1) {
             card.classList.add('left-central-card');
         }
         if(index === indiceCentro) {
             card.classList.add('central-card');
         }
-        if(index === indiceRightCentro) {
+        if(index === indiceCentro+1) {
             card.classList.add('right-central-card');
         }
 
@@ -80,4 +78,10 @@ function renderizarCards(lista) {
         container.appendChild(card);
     });
 }
-renderizarCards(dados);
+function atualizarLista(novaLista) {
+    listaVisual = novaLista;
+    indiceCentro = Math.floor(listaVisual.length / 2);
+    renderizarCards(listaVisual);
+}
+
+renderizarCards(listaVisual);
