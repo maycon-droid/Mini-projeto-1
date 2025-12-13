@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap');
 * { 
     box-sizing: border-box; 
     margin: 0; 
@@ -37,6 +38,18 @@ main {
     padding: 2rem; 
     border-radius: 8px; 
     box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
+    height: calc(105vh - 160px);
+    padding-bottom: 4rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+.content h2 {
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 1rem;
+    color: #328125;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 footer { 
@@ -45,4 +58,33 @@ footer {
     font-size: 0.9rem; 
     background: #fafafa; 
     border-top: 1px solid #e0e0e0; 
+}
+#card-container {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+    justify-content: center;
+    align-items: center;
+}
+.card {
+    border: 1px solid #a5a5a5;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    height: 40vh;
+    width: 250px;
+}
+.card button {
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+.left-central-card{
+    height: 50vh;
+}
+.central-card{
+    height: 60vh;
+}
+.right-central-card{
+    height: 50vh;
 }
