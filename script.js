@@ -66,9 +66,12 @@ function renderizarCards(lista) {
         if(index === indiceRightCentro) {
             card.classList.add('right-central-card');
         }
-        
+
         card.innerHTML = `
             <h3>${item.titulo}</h3>
+            <div class= "card-image">
+                <img src="${item.imagem}" alt="${item.titulo}" />
+            </div>
             <p><b>Categoria:</b> ${item.categoria}</p>
             <p><b>Data:</b> ${item.data}</p>
             <p>${item.descricao}</p>
