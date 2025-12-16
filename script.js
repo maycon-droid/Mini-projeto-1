@@ -85,3 +85,27 @@ function atualizarLista(novaLista) {
 }
 
 renderizarCards(listaVisual);
+
+const searchInput = document.getElementById('search');
+
+searchInput.addEventListener('input', (event) =>{
+    const valorPesquisa = formatString(event.target.value);
+    
+    const cards = document.querySelectorAll('#card-container .card');
+    
+    cards.forEach(card => {
+        const textoCard = formatString(card.textContent);
+        
+        if (textoCard.includes(valorPesquisa)) {
+            card.style.display = ''; 
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+function formatString (value){
+    return value
+    .toLowerCase()
+    .trim();
+}
