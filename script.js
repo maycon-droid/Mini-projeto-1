@@ -11,7 +11,7 @@ const dados = [
     {
         id: 2,
         titulo: "Economia de água",
-        categoria: "Àgua",
+        categoria: "Agua",
         data: "2025-06-20",
         descricao: "Reduzir tempo no banho e consertar vazamentos.",
         curtidas: 2,
@@ -42,18 +42,18 @@ const dados = [
         id: 5,
         titulo: "Reduzir uso de plástico",
         categoria: "Lixo",
-        data: "2025-09-05",
+        data: "2024-09-05",
         descricao: "Utilizar sacolas reutilizáveis e evitar produtos com excesso de embalagem plástica.",
         curtidas: 4,
         imagem: "img/lixo.jpg"
     }
 ]
-let indiceLeftCentro = 1;
-let indiceCentro = 2;
-let indiceRightCentro = 3;
-
+let listaVisual = dados.slice();
+let indiceCentro = Math.floor(listaVisual.length / 2);
 const container = document.getElementById('card-container');
-
+function listaPequena(lista) {
+    return lista.length <= 4;
+}
 function renderizarCards(lista) {
     container.innerHTML = '';
 
@@ -61,16 +61,20 @@ function renderizarCards(lista) {
         const card = document.createElement('div');
         card.classList.add('card');
 
-        if(index === indiceLeftCentro) {
+    if (listaPequena(lista)) {
+        card.classList.add('central-card');
+    } 
+    else {
+        if (index === indiceCentro - 1) {
             card.classList.add('left-central-card');
         }
-        if(index === indiceCentro) {
+        if (index === indiceCentro) {
             card.classList.add('central-card');
         }
-        if(index === indiceRightCentro) {
+        if (index === indiceCentro + 1) {
             card.classList.add('right-central-card');
         }
-        
+    }
         card.innerHTML = `
             <h3>${item.titulo}</h3>
             <p class="card-category"><b>Categoria:</b> ${item.categoria}</p>
@@ -90,31 +94,24 @@ function atualizarLista(novaLista) {
     indiceCentro = Math.floor(listaVisual.length / 2);
     renderizarCards(listaVisual);
 }
-
-renderizarCards(listaVisual);
-
 const searchInput = document.getElementById('search');
-
-searchInput.addEventListener('input', (event) =>{
-    const valorPesquisa = formatString(event.target.value);
-    
-    const cards = document.querySelectorAll('#card-container .card');
-    
-    cards.forEach(card => {
-        const textoCard = formatString(card.textContent);
-        
-        if (textoCard.includes(valorPesquisa)) {
-            card.style.display = ''; 
-        } else {
-            card.style.display = 'none';
-        }
-    });
-});
-
-function formatString (value){
+function formataString(value) {
     return value
-    .toLowerCase()
-    .trim();
+        .toLowerCase()
+        .trim();
 }
 
-renderizarCards(dados);
+if (searchInput) {
+    searchInput.addEventListener('input', (event) => {
+        const valorPesquisa = formataString(event.target.value);
+
+        const listaFiltrada = dados.filter(item =>
+            formataString(item.titulo).includes(valorPesquisa) ||
+            formataString(item.categoria).includes(valorPesquisa) ||
+            formataString(item.data).includes(valorPesquisa)
+        );
+
+        atualizarLista(listaFiltrada);
+    });
+}
+renderizarCards(listaVisual);

@@ -137,6 +137,8 @@ footer {
 
 .campo-pesquisa:focus{
  outline: none;
+}
+
 .card-image {
     width: 95%;
     aspect-ratio: 1 / 1;
