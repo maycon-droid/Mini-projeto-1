@@ -2,7 +2,7 @@ const dados = [
     {
         id: 1,
         titulo: "Reciclagem em casa",
-        categoria: "reciclagem",
+        categoria: "Reciclagem",
         data: "2025-05-12",
         descricao: "Separar corretamente os materiais recicláveis em casa.",
         curtidas: 0
@@ -11,41 +11,47 @@ const dados = [
     {
         id: 2,
         titulo: "Economia de água",
-        categoria: "Consumo Consciente",
+        categoria: "Àgua",
         data: "2025-06-20",
         descricao: "Reduzir tempo no banho e consertar vazamentos.",
-        curtidas: 2
+        curtidas: 2,
+        imagem: "img/agua.jpg"
     }
     ,
     {  
         id: 3,
         titulo: "Transporte público",
-        categoria: "Mobilidade Sustentável",
+        categoria: "Transporte",
         data: "2025-07-15",
         descricao: "Optar por transporte público ou bicicleta em vez de carro.",
-        curtidas: 5
+        curtidas: 5,
+        imagem: "img/transporte.jpg"
     }
     ,
     {  
         id: 4,
         titulo: "Plantar árvores",
-        categoria: "Reflorestamento",
+        categoria: "Plantas",
         data: "2025-08-10",
         descricao: "Participar de campanhas de plantio de árvores na comunidade.",
-        curtidas: 3
+        curtidas: 3,
+        imagem: "img/planta.jpg"
     }
     , 
     {  
         id: 5,
         titulo: "Reduzir uso de plástico",
-        categoria: "Consumo Consciente",
+        categoria: "Lixo",
         data: "2025-09-05",
         descricao: "Utilizar sacolas reutilizáveis e evitar produtos com excesso de embalagem plástica.",
-        curtidas: 4
+        curtidas: 4,
+        imagem: "img/lixo.jpg"
     }
 ]
-let listaVisual=[...dados];
-let indiceCentro= Math.floor(listaVisual.length / 2);
+let indiceLeftCentro = 1;
+let indiceCentro = 2;
+let indiceRightCentro = 3;
+
 const container = document.getElementById('card-container');
 
 function renderizarCards(lista) {
@@ -55,29 +61,30 @@ function renderizarCards(lista) {
         const card = document.createElement('div');
         card.classList.add('card');
 
-        if(index === indiceCentro-1) {
+        if(index === indiceLeftCentro) {
             card.classList.add('left-central-card');
         }
         if(index === indiceCentro) {
             card.classList.add('central-card');
         }
-        if(index === indiceCentro+1) {
+        if(index === indiceRightCentro) {
             card.classList.add('right-central-card');
         }
-
+        
         card.innerHTML = `
             <h3>${item.titulo}</h3>
-            <div class= "card-image">
-                <img src="${item.imagem}" alt="${item.titulo}" />
+            <p class="card-category"><b>Categoria:</b> ${item.categoria}</p>
+            <div class="card-image">
+                <img src="${item.imagem}" alt="${item.titulo}">
             </div>
-            <p><b>Categoria:</b> ${item.categoria}</p>
-            <p><b>Data:</b> ${item.data}</p>
-            <p>${item.descricao}</p>
-            <button id="like-btn-${item.id}">Curtir (${item.curtidas})</button>
+            <p class="card-date"><b>Data:</b> ${item.data}</p>
+            <p class="card-description">${item.descricao}</p>
+            <button class="like-btn" id="like-btn-${item.id}">Curtir (${item.curtidas})</button>
         `;
         container.appendChild(card);
     });
 }
+
 function atualizarLista(novaLista) {
     listaVisual = novaLista;
     indiceCentro = Math.floor(listaVisual.length / 2);
@@ -109,3 +116,5 @@ function formatString (value){
     .toLowerCase()
     .trim();
 }
+
+renderizarCards(dados);
