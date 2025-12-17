@@ -5,16 +5,19 @@ const dados = [
         categoria: "Reciclagem",
         data: "2025-05-12",
         descricao: "Separar corretamente os materiais recicláveis em casa.",
-        curtidas: 0,
-        imagem: "img/reciclagem.jpg"
-    },
+        curtidas: 243,
+        curtido: false,
+        imagem: "img/reciclagem.png"
+    }
+    ,
     {
         id: 2,
         titulo: "Economia de água",
         categoria: "Agua",
         data: "2025-06-20",
         descricao: "Reduzir tempo no banho e consertar vazamentos.",
-        curtidas: 2,
+        curtidas: 567,
+        curtido: false,
         imagem: "img/agua.jpg"
     },
     {  
@@ -23,7 +26,8 @@ const dados = [
         categoria: "Transporte",
         data: "2025-07-15",
         descricao: "Optar por transporte público ou bicicleta em vez de carro.",
-        curtidas: 5,
+        curtidas: 500,
+        curtido: false,
         imagem: "img/transporte.jpg"
     },
     {  
@@ -32,7 +36,8 @@ const dados = [
         categoria: "Plantas",
         data: "2025-08-10",
         descricao: "Participar de campanhas de plantio de árvores na comunidade.",
-        curtidas: 3,
+        curtidas: 398,
+        curtido: false,
         imagem: "img/planta.jpg"
     },
     {  
@@ -42,6 +47,7 @@ const dados = [
         data: "2024-09-05",
         descricao: "Utilizar sacolas reutilizáveis e evitar produtos com excesso de embalagem plástica.",
         curtidas: 4,
+        curtido: false,
         imagem: "img/lixo.jpg"
     }
 ];
@@ -81,7 +87,7 @@ function renderizarCards(lista) {
             </div>
             <p class="card-date"><b>Data:</b> ${item.data}</p>
             <p class="card-description">${item.descricao}</p>
-            <button class="like-btn" id="like-btn-${item.id}">Curtir (${item.curtidas})</button>
+            <button onclick="clickGostei(${item.id})" class="like-btn" id="like-btn-${item.id}">Curtir (${item.curtidas})</button>
         `;
         container.appendChild(card);
     });
@@ -121,4 +127,17 @@ if (filtroSelect) {
     });
 }
 
+function clickGostei(id) {
+    const item = dados.find(item => item.id === id);
+    if (item && !item.curtido) {
+        item.curtidas++;
+        item.curtido = true;
+        atualizarLista(dados);
+    }
+    else {
+        item.curtidas--;
+        item.curtido = false;
+        atualizarLista(dados);
+    }
+}
 renderizarCards(listaVisual);
