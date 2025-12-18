@@ -68,7 +68,7 @@ const dados = [
         descricao: "Desligar aparelhos eletrônicos quando não estiverem em uso.",
         curtidas: 320,
         curtido: false,
-        imagem: "img/reciclagem.jpg"
+        imagem: "img/geral.jpg"
     }
 ];
 
@@ -109,7 +109,7 @@ function renderizarCards(lista) {
             </div>
             <p class="card-date"><b>Data:</b> ${item.data}</p>
             <p class="card-description">${item.descricao}</p>
-            <button onclick="clickGostei(${item.id})" class="like-btn" id="like-btn-${item.id}">Curtir (${item.curtidas})</button>
+            <button onclick="clickGostei(${item.id})" class="like-btn ${item.curtido ? 'curtido' : ''}" id="like-btn-${item.id}"><span class="coracao">❤</span> (${item.curtidas})</button>
         `;
         container.appendChild(card);
     });
