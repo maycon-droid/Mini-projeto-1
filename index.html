@@ -40,6 +40,29 @@
               <button id="next">▶</button>
             </div>
         </section>
+        <section class="content" id="area-cadastro">
+        <h2>Adicionar Nova Ação</h2>
+        <form id="form-novo-card">
+          <div class="input-group">
+            <input type="text" id="novo-titulo" placeholder="Título da ação" required>
+            <select id="nova-categoria" required>
+              <option value="" disabled selected>Escolha a Categoria</option>
+              <option value="Reciclagem">Reciclagem</option>
+              <option value="Agua">Água</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Plantas">Plantas</option>
+              <option value="Lixo">Lixo</option>
+              <option value="geral">Geral</option>
+            </select>
+          </div>
+          <div class="file-input-container">
+              <label for="nova-imagem">Imagem (Máx: 500KB):</label>
+              <input type="file" id="nova-imagem" accept="image/*">
+          </div>
+          <textarea id="nova-descricao" placeholder="Descrição da ação sustentável..." rows="3" required></textarea>
+          <button type="submit" class="btn-adicionar">➕ Adicionar Card</button>
+        </form>
+      </section>
           <section class="ranking-secao">
             <h2>Top 5 cards com mais curtidas</h2>
             <div id="ranking-container"></div>
