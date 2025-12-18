@@ -152,19 +152,51 @@ if (filtroSelect) {
     });
 } 
 
+function renderizarRanking() {
+    const rankingContainer = document.getElementById('ranking-container');
+    if (!rankingContainer) return;
+
+    rankingContainer.innerHTML = '';
+
+    const top5 = [...dados]
+        .sort((a, b) => b.curtidas - a.curtidas)
+        .slice(0, 5);
+
+    top5.forEach((item, index) => {
+        const cardRanking = document.createElement('div');
+        cardRanking.classList.add('ranking-card');
+
+        cardRanking.innerHTML = `
+            <span class="ranking-posicao">${index + 1}º Lugar</span>
+            <h3>${item.titulo}</h3>
+            <p class="card-category"><b>Categoria:</b> ${item.categoria}</p>
+            <div class="card-image">
+                <img src="${item.imagem || ''}" alt="${item.titulo}">
+            </div>
+            <p class="card-date"><b>Data:</b> ${item.data}</p>
+            <p><b>${item.curtidas}</b> curtidas</p>
+        `;
+        rankingContainer.appendChild(cardRanking);
+    });
+}
+
 function clickGostei(id) {
     const item = dados.find(item => item.id === id);
-    if (item && !item.curtido) {
-        item.curtidas++;
-        item.curtido = true;
-        atualizarLista(dados);
-    }
-    else {
-        item.curtidas--;
-        item.curtido = false;
-        atualizarLista(dados);
+    if (item) {
+        if (!item.curtido) {
+            item.curtidas++;
+            item.curtido = true;
+        } else {
+            item.curtidas--;
+            item.curtido = false;
+        }
+        renderizarCards(listaVisual);
+        renderizarRanking();
     }
 }
+
+renderizarRanking();
+renderizarCards(listaVisual);
 
 function moverDireita() {
     const primeiro = listaVisual.shift();
