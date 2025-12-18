@@ -45,10 +45,30 @@ const dados = [
         titulo: "Reduzir uso de plástico",
         categoria: "Lixo",
         data: "2024-09-05",
-        descricao: "Utilizar sacolas reutilizáveis e evitar produtos com excesso de embalagem plástica.",
+        descricao: "Utilizar sacolas reutilizáveis, sempre q possível.",
         curtidas: 4,
         curtido: false,
         imagem: "img/lixo.jpg"
+    },
+    {
+        id: 6,
+        titulo: "Compostagem doméstica",
+        categoria: "Lixo",
+        data: "2024-10-01",
+        descricao: "Transformar resíduos orgânicos em adubo para plantas.",
+        curtidas: 150,
+        curtido: false,
+        imagem: "img/lixo.jpg"
+    },
+    {  
+        id: 7,
+        titulo: "Uso consciente de energia",
+        categoria: "geral",
+        data: "2024-11-11",
+        descricao: "Desligar aparelhos eletrônicos quando não estiverem em uso.",
+        curtidas: 320,
+        curtido: false,
+        imagem: "img/reciclagem.jpg"
     }
 ];
 
@@ -61,22 +81,24 @@ function listaPequena(lista) {
 }
 
 function formataString(value) {
-    return value.toLowerCase().trim();
+    return String(value).toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 function renderizarCards(lista) {
     container.innerHTML = '';
+    const MAX_CARDS = 5;
+    const visiveis = lista.slice(0, MAX_CARDS);
+    indiceCentro = Math.floor(visiveis.length / 2);
 
-    lista.forEach((item, index) => {
+    visiveis.forEach((item, index) => {
         const card = document.createElement('div');
         card.classList.add('card');
-
-        if (listaPequena(lista)) {
+        if (listaPequena(visiveis)) {
             card.classList.add('central-card');
         } else {
-            if (index === indiceCentro - 1) card.classList.add('left-central-card');
             if (index === indiceCentro) card.classList.add('central-card');
-            if (index === indiceCentro + 1) card.classList.add('right-central-card');
+            else if (index === indiceCentro - 1) card.classList.add('left-central-card');
+            else if (index === indiceCentro + 1) card.classList.add('right-central-card');
         }
 
         card.innerHTML = `
@@ -111,6 +133,8 @@ if (searchInput) {
     });
 }
 
+
+
 const filtroSelect = document.getElementById('filtro-select');
 if (filtroSelect) {
     filtroSelect.addEventListener('change', () => {
@@ -124,8 +148,9 @@ if (filtroSelect) {
             );
             atualizarLista(listaFiltrada);
         }
+        
     });
-}
+} 
 
 function clickGostei(id) {
     const item = dados.find(item => item.id === id);
@@ -140,4 +165,32 @@ function clickGostei(id) {
         atualizarLista(dados);
     }
 }
+
+function moverDireita() {
+    const primeiro = listaVisual.shift();
+    listaVisual.push(primeiro);
+    renderizarCards(listaVisual);
+}
+
+function moverEsquerda() {
+    const ultimo = listaVisual.pop();
+    listaVisual.unshift(ultimo);
+    renderizarCards(listaVisual);
+}
+
+document.getElementById("next").addEventListener("click", moverDireita);
+document.getElementById("prev").addEventListener("click", moverEsquerda);
+
+document.addEventListener('keydown', (event) => {
+    const tag = document.activeElement && document.activeElement.tagName.toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        moverDireita();
+    } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        moverEsquerda();
+    }
+});
+
 renderizarCards(listaVisual);
