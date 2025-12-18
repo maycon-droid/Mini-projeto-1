@@ -94,7 +94,7 @@ function renderizarCards(lista) {
         const card = document.createElement('div');
         card.classList.add('card');
         if (listaPequena(visiveis)) {
-            card.classList.add('central-card');
+            card.classList.add('lista-pequena');
         } else {
             if (index === indiceCentro) card.classList.add('central-card');
             else if (index === indiceCentro - 1) card.classList.add('left-central-card');
