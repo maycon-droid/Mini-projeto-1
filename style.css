@@ -40,14 +40,13 @@ main {
     padding: 2rem; 
     border-radius: 8px; 
     box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
-    height: calc(105vh - 160px);
-    padding-bottom: 4rem;
+    padding-bottom: 1rem;
     padding-left: 3rem;
     padding-right: 3rem;
 }
 .content h2 {
     font-family: 'Montserrat', sans-serif;
-    margin-bottom: 1rem;
+    margin-bottom: 4rem;
     color: #328125;
     text-align: center;
     font-weight: 700;
@@ -64,20 +63,26 @@ footer {
 #card-container {
     margin-top: 1rem;
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 5rem;
+    gap: 2rem;
+    margin-bottom: 2rem;
     justify-content: center;
     align-items: center;
+
 }
 .card {
     border: 1px solid #a5a5a5;
     padding: 1rem;
-    margin-bottom: 20vh;
     border-radius: 8px;
-    height: 40vh;
     width: 250px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    height: 360px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s;
+
+}
+.card, .central-card, .left-central-card, .right-central-card {
+    height: auto;
 }
 .card h3 {
   margin-bottom: 0.5rem;
@@ -89,16 +94,26 @@ footer {
   margin-top: 0.5rem;
   cursor: pointer;
 }
+.central-card {
+    transform: scale(1.12);
+    z-index: 3;
+}
 .left-central-card{
-    height: 50vh;
+    marginq-right: 20px;
 }
-.central-card{
-    height: 66vh;
+.left-central-card,
+.right-central-card {
+    transform: scale(1);
+    opacity: 0.9;
+    z-index: 2;
+}
 
+.card:not(.central-card):not(.left-central-card):not(.right-central-card) {
+    transform: scale(0.9);
+    opacity: 0.6;
+    z-index: 1;
 }
-.right-central-card{
-    height: 50vh;
-}
+
 .card:not(.central-card):not(.left-central-card):not(.right-central-card)
 .card-image {
     width: 80%;
@@ -156,16 +171,7 @@ footer {
     object-fit: cover;
     display: block;
 }
-.card:not(.central-card):not(.left-central-card):not(.right-central-card) 
-.card-category,
-.card:not(.central-card):not(.left-central-card):not(.right-central-card) 
-.card-date,
-.card:not(.central-card):not(.left-central-card):not(.right-central-card) 
-.card-description,
-.card:not(.central-card):not(.left-central-card):not(.right-central-card) 
-.like-btn {
-    display: none;
-}
+
 .right-central-card, .left-central-card {
     display: flex;
     flex-direction: column;
@@ -186,3 +192,16 @@ footer {
   padding: 5px;
   text-align: center;  
 }
+.controles {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.controles button {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
