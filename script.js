@@ -68,7 +68,7 @@ const dados = [
         descricao: "Desligar aparelhos eletrônicos quando não estiverem em uso.",
         curtidas: 320,
         curtido: false,
-        imagem: "img/reciclagem.jpg"
+        imagem: "img/geral.jpg"
     }
 ];
 
