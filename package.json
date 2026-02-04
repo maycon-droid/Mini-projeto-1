@@ -1,0 +1,11 @@
+{
+  "name": "ecovida-projeto",
+  "version": "1.0.0",
+  "description": "Projeto EcoVida com API REST",
+  "scripts": {
+    "server": "json-server --watch db.json --port 3000"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.4"
+  }
+}
