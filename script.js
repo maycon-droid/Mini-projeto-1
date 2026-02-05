@@ -45,26 +45,33 @@ if (formulario) {
             return;
         }
 
-        const processarCadastro = (imagemBase64) => {
-            const novoCard = {
-                titulo: tituloInput,
-                categoria: categoriaInput,
-                data: new Date().toISOString().split('T')[0],
-                descricao: descricaoInput,
-                curtidas: 0,
-                curtido: false,
-                imagem: imagemBase64
-            };
+const processarCadastro = async (imagemBase64) => {
+    const novoCard = {
+        titulo: tituloInput,
+        categoria: categoriaInput,
+        data: new Date().toISOString().split('T')[0],
+        descricao: descricaoInput,
+        curtidas: 0,
+        curtido: false,
+        imagem: imagemBase64
+    };
 
-            dados.unshift(novoCard);
-
-            if (document.getElementById('search')) document.getElementById('search').value = '';
-            if (document.getElementById('filtro-select')) document.getElementById('filtro-select').value = 'Todos';
-
-            atualizarLista(dados);
-            formulario.reset();
-            alert("Card adicionado com sucesso!");
-        };
+    try {
+        await addCorpo(novoCard);
+        
+        await carregarDados();
+        
+        if (document.getElementById('search')) document.getElementById('search').value = '';
+        if (document.getElementById('filtro-select')) document.getElementById('filtro-select').value = 'Todos';
+        formulario.reset();
+        
+        alert("✅ Card adicionado com sucesso!");
+        
+    } catch (erro) {
+        alert("❌ Erro ao adicionar card!");
+        console.error(erro);
+    }
+};
 
         if (arquivo) {
             const reader = new FileReader();
@@ -133,6 +140,9 @@ function renderizarCards(lista) {
                 id="like-btn-${item.id}">
                 <span class="coracao">❤</span> (${item.curtidas})
             </button>
+            <button onclick="deletarCard(${item.id})" class="delete-btn">
+                🗑️ Deletar
+            </button>
         `;
         container.appendChild(card);
     });
@@ -200,6 +210,21 @@ function clickGostei(id) {
 
         atualizarLista(listaVisual);
         renderizarRanking();
+    }
+}
+
+async function deletarCard(id) {
+    if (!confirm('⚠️ Tem certeza que deseja deletar este card?')) {
+        return;
+    }
+
+    try {
+        await deleteCorpo(id);
+        await carregarDados();
+        alert("✅ Card deletado com sucesso!");
+    } catch (erro) {
+        alert("❌ Erro ao deletar card!");
+        console.error(erro);
     }
 }
 
