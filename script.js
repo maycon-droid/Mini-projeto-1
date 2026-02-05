@@ -1,201 +1,75 @@
 let dados = [];
-let carregando = true;
+
+const container = document.getElementById('card-container');
+const rankingContainer = document.getElementById('ranking-container');
+const formulario = document.getElementById('form-novo-card');
+const formularioEdicao = document.getElementById('form-editar-card');
+const inputPesquisa = document.getElementById('search');
+const filtroSelect = document.getElementById('filtro-select');
+const modalEdicao = document.getElementById('modal-editar');
 
 async function carregarDados() {
     try {
-        carregando = true;
-        container.innerHTML = '<p>Carregando...</p>';
-        
+        container.innerHTML = '<p style="text-align:center; width:100%">Carregando dados...</p>';
         dados = await getCorpos();
-        carregando = false;
-        
         atualizarLista(dados);
         renderizarRanking();
     } catch (erro) {
-        carregando = false;
-        container.innerHTML = '<p>Erro ao carregar dados. Verifique se o servidor está rodando.</p>';
+        container.innerHTML = '<p style="text-align:center; color:red">Erro ao carregar dados do servidor.</p>';
         console.error(erro);
     }
 }
 
-let listaVisual = dados.slice();
-let indiceCentro = Math.floor(listaVisual.length / 2);
-const container = document.getElementById('card-container');
-
-const formulario = document.getElementById('form-novo-card');
-
-if (formulario) {
-    formulario.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const tituloInput = document.getElementById('novo-titulo').value;
-        const categoriaInput = document.getElementById('nova-categoria').value;
-        const descricaoInput = document.getElementById('nova-descricao').value;
-
-        const inputImagem = document.getElementById('nova-imagem');
-        const arquivo = inputImagem ? inputImagem.files[0] : null;
-
-        if (!tituloInput.trim() || !descricaoInput.trim() || !categoriaInput) {
-            alert("Por favor, preencha todos os campos!");
-            return;
-        }
-
-        if (arquivo && arquivo.size > 500 * 1024) {
-            alert("A imagem deve ter no máximo 500KB.");
-            return;
-        }
-
-const processarCadastro = async (imagemBase64) => {
-    const novoCard = {
-        titulo: tituloInput,
-        categoria: categoriaInput,
-        data: new Date().toISOString().split('T')[0],
-        descricao: descricaoInput,
-        curtidas: 0,
-        curtido: false,
-        imagem: imagemBase64
-    };
-
-    try {
-        await addCorpo(novoCard);
-        
-        await carregarDados();
-        
-        if (document.getElementById('search')) document.getElementById('search').value = '';
-        if (document.getElementById('filtro-select')) document.getElementById('filtro-select').value = 'Todos';
-        formulario.reset();
-        
-        alert("✅ Card adicionado com sucesso!");
-        
-    } catch (erro) {
-        alert("❌ Erro ao adicionar card!");
-        console.error(erro);
-    }
-};
-
-        if (arquivo) {
-            const reader = new FileReader();
-            reader.onload = (e) => processarCadastro(e.target.result);
-            reader.readAsDataURL(arquivo);
-        } else {
-            processarCadastro("img/reciclagem.png");
-        }
-    });
-}
-
-function listaPequena(lista) {
-    return lista.length <= 4;
-}
-
-function formataString(value) {
-    return String(value)
-        .toLowerCase()
-        .trim()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-}
-
-function renderizarCards(lista) {
-    if (carregando) {
-        container.innerHTML = '<p>Carregando...</p>';
-        return;
-    }
-    
+function atualizarLista(lista) {
     container.innerHTML = '';
-
-    if (lista.length === 0) {
-        container.innerHTML = '<p>Nenhum card encontrado.</p>';
+    
+    if(lista.length === 0) {
+        container.innerHTML = '<p>Nenhuma ação encontrada.</p>';
         return;
     }
 
-    const MAX_CARDS = 5;
-    const visiveis = lista.slice(0, MAX_CARDS);
-    indiceCentro = Math.floor(visiveis.length / 2);
-
-    visiveis.forEach((item, index) => {
+    lista.forEach(item => {
         const card = document.createElement('div');
-        card.classList.add('card');
-
-        if (listaPequena(visiveis)) {
-            card.classList.add('lista-pequena');
-        } else {
-            if (index === indiceCentro) card.classList.add('central-card');
-            else if (index === indiceCentro - 1) card.classList.add('left-central-card');
-            else if (index === indiceCentro + 1) card.classList.add('right-central-card');
-        }
-
-        const imgPath = item.imagem || 'img/reciclagem.png';
+        card.className = 'card';
+        
+        let imagemSrc = (item.imagem && item.imagem.trim() !== "") ? item.imagem : 'https://placehold.co/300x180?text=Sem+Imagem';
 
         card.innerHTML = `
-            <h3>${item.titulo}</h3>
-            <p class="card-category"><b>Categoria:</b> ${item.categoria}</p>
-            <div class="card-image">
-                <img src="${imgPath}" alt="${item.titulo}">
+            <div class="card-header">
+                <span class="categoria-tag">${item.categoria}</span>
+                <img src="${imagemSrc}" alt="${item.titulo}" onerror="this.src='https://placehold.co/300x180?text=Erro+Imagem'">
+                <h3>${item.titulo}</h3>
             </div>
-            <p class="card-date"><b>Data:</b> ${item.data}</p>
-            <p class="card-description">${item.descricao}</p>
-            <button
-                onclick="clickGostei(${item.id})"
-                class="like-btn ${item.curtido ? 'curtido' : ''}"
-                id="like-btn-${item.id}">
-                <span class="coracao">❤</span> (${item.curtidas})
-            </button>
-            <button onclick="deletarCard(${item.id})" class="delete-btn">
-                🗑️ Deletar
-            </button>
+            <div class="card-body">
+                <p>${item.descricao}</p>
+                <p class="card-date"><small>Data: ${item.data}</small></p>
+            </div>
+            <div class="card-actions">
+                <button class="btn-gostei ${item.curtido ? 'liked' : ''}" onclick="clickGostei(${item.id})">
+                    <i class="fa-solid fa-heart"></i> <span id="likes-${item.id}">${item.curtidas}</span>
+                </button>
+                <div>
+                    <button class="btn-editar" onclick="abrirModalEdicao(${item.id})"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-deletar" onclick="deletarCard(${item.id})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
         `;
         container.appendChild(card);
     });
 }
 
-function atualizarLista(novaLista) {
-    listaVisual = novaLista;
-    renderizarCards(listaVisual);
-}
-
-const searchInput = document.getElementById('search');
-if (searchInput) {
-    searchInput.addEventListener('input', (event) => {
-        const valor = formataString(event.target.value);
-        const filtrada = dados.filter(item =>
-            formataString(item.titulo).includes(valor) ||
-            formataString(item.categoria).includes(valor)
-        );
-        atualizarLista(filtrada);
-    });
-}
-
-const filtroSelect = document.getElementById('filtro-select');
-if (filtroSelect) {
-    filtroSelect.addEventListener('change', () => {
-        const cat = formataString(filtroSelect.value);
-        if (cat === 'todos') atualizarLista(dados);
-        else atualizarLista(dados.filter(item => formataString(item.categoria) === cat));
-    });
-}
-
 function renderizarRanking() {
-    const rankingContainer = document.getElementById('ranking-container');
-    if (!rankingContainer) return;
-
     rankingContainer.innerHTML = '';
+    const top5 = [...dados].sort((a, b) => b.curtidas - a.curtidas).slice(0, 5);
 
-    const top5 = [...dados]
-        .sort((a, b) => b.curtidas - a.curtidas)
-        .slice(0, 5);
-
-    top5.forEach((item, index) => {
+    top5.forEach(item => {
         const cardRanking = document.createElement('div');
-        cardRanking.classList.add('ranking-card');
-
+        cardRanking.className = 'ranking-card';
+        let imgRanking = (item.imagem && item.imagem.trim() !== "") ? item.imagem : 'https://placehold.co/100?text=...';
+        
         cardRanking.innerHTML = `
-            <span class="ranking-posicao">${index + 1}º Lugar</span>
             <h3>${item.titulo}</h3>
-            <p class="card-category"><b>Categoria:</b> ${item.categoria}</p>
-            <div class="card-image">
-                <img src="${item.imagem || 'img/reciclagem.png'}" alt="${item.titulo}">
-            </div>
-            <p class="card-date"><b>Data:</b> ${item.data}</p>
+            <img src="${imgRanking}" alt="${item.titulo}" onerror="this.src='https://placehold.co/100?text=Erro'">
             <p><b>${item.curtidas}</b> curtidas</p>
         `;
         rankingContainer.appendChild(cardRanking);
@@ -203,51 +77,131 @@ function renderizarRanking() {
 }
 
 function clickGostei(id) {
-    const item = dados.find(item => item.id === id);
+    const item = dados.find(item => item.id == id);
     if (item) {
         item.curtido = !item.curtido;
         item.curtidas += item.curtido ? 1 : -1;
-
-        atualizarLista(listaVisual);
+        atualizarLista(dados);
         renderizarRanking();
+        
+        updateCorpo(item.id, item).catch(err => console.error("Erro ao salvar like", err));
     }
 }
 
 async function deletarCard(id) {
-    if (!confirm('⚠️ Tem certeza que deseja deletar este card?')) {
-        return;
-    }
+    if (!confirm('Tem certeza que deseja apagar?')) return;
 
     try {
         await deleteCorpo(id);
         await carregarDados();
-        alert("✅ Card deletado com sucesso!");
     } catch (erro) {
-        alert("❌ Erro ao deletar card!");
+        alert("Não foi possível deletar.");
         console.error(erro);
     }
 }
 
-function moverDireita() {
-    if (listaVisual.length > 0) {
-        const primeiro = listaVisual.shift();
-        listaVisual.push(primeiro);
-        renderizarCards(listaVisual);
+if (formulario) {
+    formulario.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        
+        const btnSubmit = document.getElementById('btn-submit-adicionar');
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = "Adicionando...";
+
+        const novoItem = {
+            titulo: document.getElementById('novo-titulo').value,
+            categoria: document.getElementById('nova-categoria').value,
+            descricao: document.getElementById('nova-descricao').value,
+            imagem: document.getElementById('nova-imagem').value || '',
+            data: new Date().toISOString().split('T')[0],
+            curtidas: 0,
+            curtido: false
+        };
+
+        try {
+            await addCorpo(novoItem);
+            formulario.reset();
+            await carregarDados();
+        } catch (erro) {
+            alert("Erro ao adicionar card!");
+            console.error(erro);
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "➕ Adicionar Card";
+        }
+    });
+}
+
+function filtrarCards() {
+    const termo = inputPesquisa.value.toLowerCase();
+    const categoria = filtroSelect.value;
+
+    const filtrados = dados.filter(item => {
+        const matchTexto = item.titulo.toLowerCase().includes(termo) || item.descricao.toLowerCase().includes(termo);
+        const matchCategoria = categoria === 'Todos' || item.categoria === categoria;
+        return matchTexto && matchCategoria;
+    });
+
+    atualizarLista(filtrados);
+}
+
+inputPesquisa.addEventListener('input', filtrarCards);
+filtroSelect.addEventListener('change', filtrarCards);
+
+function abrirModalEdicao(id) {
+    const item = dados.find(x => x.id == id);
+    if(!item) return;
+
+    document.getElementById('edit-id').value = item.id;
+    document.getElementById('edit-titulo').value = item.titulo;
+    document.getElementById('edit-categoria').value = item.categoria;
+    document.getElementById('edit-descricao').value = item.descricao;
+    document.getElementById('edit-imagem').value = item.imagem || '';
+
+    modalEdicao.style.display = "block";
+}
+
+function fecharModalEdicao() {
+    modalEdicao.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modalEdicao) {
+        fecharModalEdicao();
     }
 }
 
-function moverEsquerda() {
-    if (listaVisual.length > 0) {
-        const ultimo = listaVisual.pop();
-        listaVisual.unshift(ultimo);
-        renderizarCards(listaVisual);
+formularioEdicao.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('edit-id').value;
+    const btnSalvar = document.getElementById('btn-submit-editar');
+    
+    btnSalvar.disabled = true;
+    btnSalvar.innerText = "Salvando...";
+
+    const itemOriginal = dados.find(x => x.id == id);
+    
+    const objetoAtualizado = {
+        ...itemOriginal,
+        titulo: document.getElementById('edit-titulo').value,
+        categoria: document.getElementById('edit-categoria').value,
+        descricao: document.getElementById('edit-descricao').value,
+        imagem: document.getElementById('edit-imagem').value
+    };
+
+    try {
+        await updateCorpo(id, objetoAtualizado);
+        fecharModalEdicao();
+        await carregarDados();
+        alert("Card atualizado com sucesso!");
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao atualizar o card.");
+    } finally {
+        btnSalvar.disabled = false;
+        btnSalvar.innerText = "💾 Salvar Alterações";
     }
-}
-
-const nextBtn = document.getElementById("next");
-const prevBtn = document.getElementById("prev");
-
-if (nextBtn) nextBtn.addEventListener("click", moverDireita);
-if (prevBtn) prevBtn.addEventListener("click", moverEsquerda);
+});
 
 carregarDados();

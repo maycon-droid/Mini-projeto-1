@@ -53,8 +53,8 @@
             </select>
           </div>
           <div class="file-input-container">
-              <label for="nova-imagem">Imagem (URL ou Caminho):</label>
-              <input type="text" id="nova-imagem" placeholder="ex: img/reciclagem.png">
+              <label for="nova-imagem">Imagem (URL):</label>
+              <input type="text" id="nova-imagem" placeholder="Cole o link da imagem aqui">
           </div>
           <textarea id="nova-descricao" placeholder="Descrição da ação sustentável..." rows="3" required></textarea>
           <button type="submit" class="btn-adicionar" id="btn-submit-adicionar">➕ Adicionar Card</button>
@@ -86,6 +86,9 @@
             <option value="Lixo">Lixo</option>
             <option value="geral">Geral</option>
         </select>
+
+        <label>Imagem (URL):</label>
+        <input type="text" id="edit-imagem">
 
         <label>Descrição:</label>
         <textarea id="edit-descricao" rows="3" required></textarea>
