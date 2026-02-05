@@ -6,11 +6,11 @@ async function getCorpos() {
     return response.json();
 }
 
-async function createCorpo(corpo) {
+async function addCorpo(novoCorpo) {
     const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(corpo)
+        body: JSON.stringify(novoCorpo)
     });
     if (!response.ok) throw new Error('Erro ao criar');
     return response.json();
@@ -25,7 +25,7 @@ async function deleteCorpo(id) {
 }
 
 async function updateCorpo(id, corpo) {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/${id}`, { 
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(corpo)
